@@ -21,6 +21,7 @@ export interface CompanyKeyMetric {
 export interface Company {
   id: string;
   slug: string;
+  ticker: string;
   name: string;
   tagline: string;
   industry: string;
@@ -31,6 +32,8 @@ export interface Company {
   financials: CompanyFinancials;
   executives: CompanyExecutive[];
   keyMetrics: CompanyKeyMetric[];
+  livePrice?: number;
+  changePercent?: number;
 }
 
 export interface CompanySummary {
