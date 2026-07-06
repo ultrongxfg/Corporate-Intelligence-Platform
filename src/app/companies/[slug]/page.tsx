@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CompanyProfilePage({ params }: PageProps) {
   const { slug } = await params;
-  const company = companyService.getCompanyBySlug(slug);
+  const company = await companyService.getCompanyBySlug(slug);
 
   if (!company) {
     notFound();
