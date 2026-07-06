@@ -7,7 +7,7 @@ interface RouteParams {
 
 export async function GET(_request: Request, { params }: RouteParams) {
   const { id } = await params;
-  const company = companyService.getCompanyById(id);
+ const company = await companyService.getCompanyById(id);
 
   if (!company) {
     return apiError("Company not found", 404);

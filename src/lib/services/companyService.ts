@@ -1,4 +1,5 @@
 import { companyRepository } from "@/lib/repositories/companyRepository";
+import { marketDataService } from "@/lib/services/marketDataService";
 import type { Company, CompanySummary } from "@/types/company";
 
 export const companyService = {
@@ -6,11 +7,29 @@ export const companyService = {
     return companyRepository.findAllSummaries();
   },
 
-  getCompanyById(id: string): Company | null {
-    return companyRepository.findById(id) ?? null;
+  async getCompanyById(id: string): Promise<Company | null> {
+    const company = companyRepository.findById(id);
+    if (!company) return null;
+
+    const liveData = await marketDataService.getLiveData(company.ticker);
+
+    return {
+      ...company,
+      livePrice: liveData?.price,
+      changePercent: liveData?.changePercent,
+    };
   },
 
-  getCompanyBySlug(slug: string): Company | null {
-    return companyRepository.findBySlug(slug) ?? null;
+  async getCompanyBySlug(slug: string): Promise<Company | null> {
+    const company = companyRepository.findBySlug(slug);
+    if (!company) return null;
+
+    const liveData = await marketDataService.getLiveData(company.ticker);
+
+    return {
+      ...company,
+      livePrice: liveData?.price,
+      changePercent: liveData?.changePercent,
+    };
   },
 };
