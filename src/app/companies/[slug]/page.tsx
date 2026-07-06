@@ -10,7 +10,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const company = companyService.getCompanyBySlug(slug);
+ const company = await companyService.getCompanyBySlug(slug);
 
   if (!company) {
     return { title: "Company Not Found" };
@@ -78,16 +78,30 @@ export default async function CompanyProfilePage({ params }: PageProps) {
           </div>
         </div>
 
-        <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <MetricCard label="Revenue" value={financials.revenue} trend="up" />
-          <MetricCard label="Net Income" value={financials.netIncome} trend="up" />
-          <MetricCard
-            label="Employees"
-            value={financials.employees.toLocaleString()}
-            trend="up"
-          />
-          <MetricCard label="Industry" value={company.industry} trend="neutral" />
-        </div>
+       <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+  {company.livePrice !== undefined && (
+    <MetricCard
+      label="Live Price"
+      value={`$${company.livePrice.toFixed(2)}`}
+      trend={
+        (company.changePercent ?? 0) >= 0 ? "up" : "down"
+      }
+      subtext={
+        company.changePercent !== undefined
+          ? `${company.changePercent >= 0 ? "+" : ""}${company.changePercent}%`
+          : undefined
+      }
+    />
+  )}
+  <MetricCard label="Revenue" value={financials.revenue} trend="up" />
+  <MetricCard label="Net Income" value={financials.netIncome} trend="up" />
+  <MetricCard
+    label="Employees"
+    value={financials.employees.toLocaleString()}
+    trend="up"
+  />
+  <MetricCard label="Industry" value={company.industry} trend="neutral" />
+</div> 
 
         <div className="grid gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2">

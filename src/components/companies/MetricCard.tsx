@@ -2,6 +2,7 @@ interface MetricCardProps {
   label: string;
   value: string;
   trend?: "up" | "down" | "neutral";
+  subtext?: string;
 }
 
 const trendStyles = {
@@ -16,7 +17,7 @@ const trendIcons = {
   neutral: "→",
 };
 
-export function MetricCard({ label, value, trend = "neutral" }: MetricCardProps) {
+export function MetricCard({ label, value, trend = "neutral", subtext }: MetricCardProps) {
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
       <p className="mb-1 text-sm text-slate-500">{label}</p>
@@ -28,6 +29,11 @@ export function MetricCard({ label, value, trend = "neutral" }: MetricCardProps)
           </span>
         )}
       </div>
+      {subtext && (
+        <p className={`mt-1 text-xs font-medium ${trendStyles[trend]}`}>
+          {subtext}
+        </p>
+      )}
     </div>
   );
 }
